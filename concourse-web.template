@@ -342,7 +342,7 @@
 
           "install_concourse" : {
             "sources" : {
-              "/usr/local/concourse/bin" : "https://github.com/concourse/concourse/releases/download/v5.8.0/concourse-5.8.0-linux-amd64.tgz"
+              "/usr/local" : "https://github.com/concourse/concourse/releases/download/v5.8.0/concourse-5.8.0-linux-amd64.tgz"
             },
             "files" : {
               "/etc/concourse/keys/init": {
