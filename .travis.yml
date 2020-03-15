@@ -5,8 +5,9 @@ branches:
   only:
   - master
 env:
-  - TEMPLATE=concourse-web.template
-  - STACK_NAME=concourse
+  global:
+    - TEMPLATE=concourse-web.template
+    - STACK_NAME=concourse
 jobs:
   include:
     - stage: Remove previous stack
