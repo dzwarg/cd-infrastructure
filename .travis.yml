@@ -18,10 +18,10 @@ jobs:
       script: aws s3 cp ${TEMPLATE} s3://${S3_BUCKET}/
     - stage: Deploy new stack
       script: |
-        aws cloudformation create-stack --stack-name ${STACK_NAME} 
-        --template-url=https://${S3_BUCKET}.s3.${AWS_REGION}.amazonaws.com/${TEMPLATE} 
-        --parameters ParameterKey=VpcId,ParameterValue=${VPC_ID} 
-          ParameterKey=KeyName,ParameterValue=${KEYPAIR_NAME} 
-          ParameterKey=Subnets,ParameterValue=${SUBNETS} 
-          ParameterKey=DBUser,ParameterValue=${DB_USER} 
+        aws cloudformation create-stack --stack-name ${STACK_NAME} \
+        --template-url=https://${S3_BUCKET}.s3.${AWS_REGION}.amazonaws.com/${TEMPLATE} \
+        --parameters ParameterKey=VpcId,ParameterValue=${VPC_ID} \
+          ParameterKey=KeyName,ParameterValue=${KEYPAIR_NAME} \
+          ParameterKey=Subnets,ParameterValue=${SUBNETS} \
+          ParameterKey=DBUser,ParameterValue=${DB_USER} \
           ParameterKey=DBPassword,ParameterValue=${DB_PASSWORD}
