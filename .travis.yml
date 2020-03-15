@@ -6,17 +6,18 @@ branches:
   - master
 env:
   - TEMPLATE=concourse-web.template
+  - STACK_NAME=concourse
 jobs:
   include:
     - stage: Remove previous stack
       script:
-        - aws cloudformation delete-stack --stack-name concourse
-        - aws cloudformation wait stack-delete-complete
+        - aws cloudformation delete-stack --stack-name ${STACK_NAME}
+        - aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}
     - stage: Upload new stack template
       script: aws s3 cp ${TEMPLATE} s3://${S3_BUCKET}/
     - stage: Deploy new stack
       script: |
-        aws cloudformation create-stack --stack-name concourse 
+        aws cloudformation create-stack --stack-name ${STACK_NAME} 
         --template-url=https://${S3_BUCKET}.s3.${AWS_REGION}.amazonaws.com/${TEMPLATE} 
         --parameters ParameterKey=VpcId,ParameterValue=${VPC_ID} 
           ParameterKey=KeyName,ParameterValue=${KEYPAIR_NAME} 
