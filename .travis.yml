@@ -19,7 +19,7 @@ jobs:
     - stage: Deploy new stack
       script: |
         aws cloudformation create-stack --stack-name ${STACK_NAME} \
-        --template-url=https://${S3_BUCKET}.s3.${AWS_REGION}.amazonaws.com/${TEMPLATE} \
+        --template-url=https://${S3_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${TEMPLATE} \
         --parameters ParameterKey=VpcId,ParameterValue=${VPC_ID} \
           ParameterKey=KeyName,ParameterValue=${KEYPAIR_NAME} \
           ParameterKey=Subnets,ParameterValue=${SUBNETS} \
