@@ -14,7 +14,7 @@ jobs:
       script:
         - aws cloudformation delete-stack --stack-name ${STACK_NAME}
         - aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}
-        - aws rds describe-db-cluster-snapshots --query "DBClusterSnapshots[].DBClusterSnapshotArn" --output text | xargs printf "%s\n" | xargs -i aws rds delete-db-cluster-snapshot --db-cluster-snapshot-identifier {}
+        - aws rds describe-db-cluster-snapshots --query "DBClusterSnapshots[].DBClusterSnapshotArn" --filters "Name=snapshot-type,Values=manual" --output text | xargs printf "%s\n" | xargs -i aws rds delete-db-cluster-snapshot --db-cluster-snapshot-identifier {}
     - stage: Upload new stack template
       script: aws s3 cp ${TEMPLATE} s3://${S3_BUCKET}/
     - stage: Deploy new stack
