@@ -221,10 +221,22 @@
 
   "Resources" : {
 
+    "ALBSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Enable HTTP access via port 8080",
+        "SecurityGroupIngress" : [
+          {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080"}
+        ],
+        "VpcId" : { "Ref" : "VpcId" }
+      }
+    },
+
     "ApplicationLoadBalancer" : {
       "Type" : "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Properties" : {
-        "Subnets" : { "Ref" : "Subnets"}
+        "Subnets" : { "Ref" : "Subnets"},
+        "SecurityGroups": { "Ref": "ALBSecurityGroup" }
       }
     },
 
@@ -263,7 +275,7 @@
     "WebServerSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "Enable HTTP access via port 80 locked down to the load balancer + SSH access",
+        "GroupDescription" : "Enable HTTP access via port 8080 locked down to the load balancer + SSH access",
         "SecurityGroupIngress" : [
           {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "SourceSecurityGroupId" : {"Fn::Select" : [0, {"Fn::GetAtt" : ["ApplicationLoadBalancer", "SecurityGroups"]}]}},
           {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : { "Ref" : "SSHLocation"}}
