@@ -408,10 +408,21 @@
               "/etc/init.d/concourse": {
                 "content": { "Fn::Join" : [ "\n", [
                   "#!/bin/bash",
+                  "# chkconfig: 345 99 01",
+                  "# description: concourse web client",
                   "PATH=$PATH:/usr/local/concourse/bin",
                   "source /etc/concourse/env",
                   "concourse web 1>/var/log/concourse.log 2>/var/log/concourse_error.log"
-                ]]}
+                ]]},
+                "mode" : "000755",
+                "owner": "root",
+                "group": "root"
+              }
+            },
+            "commands": {
+              "01_install_service": {
+                "command": "chkconfig --add concourse",
+                "cwd": "/etc/init.d"
               }
             },
             "services": {
