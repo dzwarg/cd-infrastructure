@@ -314,7 +314,7 @@
       "Metadata" : {
         "AWS::CloudFormation::Init" : {
           "configSets" : {
-            "concourse_install" : ["install_cfn", "install_concourse" ]
+            "concourse_install" : ["install_cfn", "install_concourse", "configure_environment", "start_concourse" ]
           },
           "install_cfn" : {
             "files": {
@@ -384,7 +384,7 @@
             }
           },
           
-          "configure_concourse": {
+          "configure_environment": {
             "files": {
               "/etc/concourse/env": {
                 "content": { "Fn::Join" : [ "", [
@@ -399,6 +399,37 @@
                   "export CONCOURSE_POSTGRES_USER=",{ "Ref" : "DBUser" },"\n",
                   "export CONCOURSE_POSTGRES_PASSWORD=",{ "Ref" : "DBPassword" },"\n"
                 ]]}
+              }
+            }
+          },
+          
+          "start_concourse": {
+            "files": {
+              "/etc/init.d/concourse": {
+                "content": { "Fn::Join" : [ "\n", [
+                  "#!/bin/bash",
+                  "PATH=$PATH:/usr/local/concourse/bin",
+                  "source /etc/concourse/env",
+                  "concourse web 1>/var/log/concourse.log 2>/var/log/concourse_error.log"
+                ]]}
+              }
+            },
+            "services": {
+              "sysvinit": {
+                "concourse": {
+                  "enabled": "true",
+                  "ensureRunning": "true",
+                  "files": [
+                    "/tmp/create-concourse-keys",
+                    "/etc/concourse/keys/session_signing_key",
+                    "/etc/concourse/keys/tsa_host_key",
+                    "/etc/concourse/keys/authorized_worker_keys",
+                    "/etc/concourse/env"
+                  ],
+                  "sources": [
+                    "/usr/local/concourse"
+                  ]
+                }
               }
             }
           }
