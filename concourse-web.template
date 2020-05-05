@@ -412,7 +412,7 @@
                   "# description: concourse web client",
                   "PATH=$PATH:/usr/local/concourse/bin",
                   "source /etc/concourse/env",
-                  "concourse web 1>/var/log/concourse.log 2>/var/log/concourse_error.log"
+                  "concourse web 1>/var/log/concourse.log 2>/var/log/concourse_error.log &"
                 ]]},
                 "mode" : "000755",
                 "owner": "root",
@@ -475,10 +475,10 @@
       "Properties" : {
         "GroupDescription": "Open database for access",
         "SecurityGroupIngress" : [{
-        "IpProtocol" : "tcp",
-        "FromPort" : "5432",
-        "ToPort" : "5432",
-        "SourceSecurityGroupId" : { "Ref" : "WebServerSecurityGroup" }
+          "IpProtocol" : "tcp",
+          "FromPort" : "5432",
+          "ToPort" : "5432",
+          "SourceSecurityGroupId" : { "Ref" : "WebServerSecurityGroup" }
         }],
         "VpcId" : { "Ref" : "VpcId" }
       }
@@ -494,7 +494,8 @@
         "MasterUsername"    : { "Ref" : "DBUser" },
         "MasterUserPassword": { "Ref" : "DBPassword" },
         "VpcSecurityGroupIds" : [{ "Fn::GetAtt": [ "DBEC2SecurityGroup", "GroupId" ]}],
-        "DBClusterParameterGroupName": "default.aurora-postgresql9.6"
+        "DBClusterParameterGroupName": "default.aurora-postgresql9.6",
+        "Port"              : "5432"
       }
     }
   },
